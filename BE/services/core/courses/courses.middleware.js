@@ -8,14 +8,14 @@ module.exports = (server) => {
 	router.get('/courses', (req, res, next) => {
 		let url_parts = url.parse(req.originalUrl, true);
 		const query = url_parts.query;
-		const from = parseInt(query.start, 10) || 0;
+		const from = query.start || 0;
 		let	to = from + parseInt(query.count, 10);
 		const sort = query.sort;
 		const id = query.id;
 		let	courses = server.db.getState().courses;
 
 		if (!!query.textFragment) {
-			courses = courses.filter((course) => course.title.concat(course.description).toUpperCase().indexOf(query.textFragment.toUpperCase()) >= 0);
+			courses = courses.filter((course) => course.name.concat(course.description).toUpperCase().indexOf(query.textFragment.toUpperCase()) >= 0);
 		}
 
 		if(sort) {
@@ -41,6 +41,7 @@ module.exports = (server) => {
 				return item.id == id;
 			});
 		}
+
 		res.json(courses);
 	});
 
